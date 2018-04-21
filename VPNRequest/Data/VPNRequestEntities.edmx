@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="VPNRequestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Capability">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CSMApprovalStatus">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="int" Nullable="false" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="ApprovedOn" Type="datetime" />
+          <Property Name="DeniedBy" Type="int" />
+          <Property Name="DeniedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="EquipmentType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EquipmentTypeId" Type="int" Nullable="false" />
+          <Property Name="ContactId" Type="int" Nullable="false" />
+          <Property Name="StatusId" Type="int" />
+        </EntityType>
+        <EntityType Name="RequestCapability">
+          <Key>
+            <PropertyRef Name="RequestId" />
+            <PropertyRef Name="CapabilityId" />
+          </Key>
+          <Property Name="RequestId" Type="int" Nullable="false" />
+          <Property Name="CapabilityId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SIGApprovalStatus">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="int" Nullable="false" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="ApprovedOn" Type="datetime" />
+          <Property Name="DeniedBy" Type="int" />
+          <Property Name="DeniedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SQDNApprovalStatus">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="int" Nullable="false" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="ApprovedOn" Type="datetime" />
+          <Property Name="DeniedBy" Type="int" />
+          <Property Name="DeniedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CSMApprovalStatus_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="CSMApprovalStatus" Type="Self.CSMApprovalStatus" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CSMApprovalStatus">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_Contact">
+          <End Role="Contact" Type="Self.Contact" Multiplicity="1" />
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Request">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_EquipmentType">
+          <End Role="EquipmentType" Type="Self.EquipmentType" Multiplicity="1" />
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EquipmentType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Request">
+              <PropertyRef Name="EquipmentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Request">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestCapability_Capability">
+          <End Role="Capability" Type="Self.Capability" Multiplicity="1" />
+          <End Role="RequestCapability" Type="Self.RequestCapability" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Capability">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RequestCapability">
+              <PropertyRef Name="CapabilityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestCapability_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RequestCapability" Type="Self.RequestCapability" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RequestCapability">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SIGApprovalStatus_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="SIGApprovalStatus" Type="Self.SIGApprovalStatus" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGApprovalStatus">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SQDNApprovalStatus_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="SQDNApprovalStatus" Type="Self.SQDNApprovalStatus" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SQDNApprovalStatus">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="VPNRequestModelStoreContainer">
+          <EntitySet Name="Capability" EntityType="Self.Capability" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CSMApprovalStatus" EntityType="Self.CSMApprovalStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EquipmentType" EntityType="Self.EquipmentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Request" EntityType="Self.Request" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestCapability" EntityType="Self.RequestCapability" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SIGApprovalStatus" EntityType="Self.SIGApprovalStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SQDNApprovalStatus" EntityType="Self.SQDNApprovalStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CSMApprovalStatus_Request" Association="Self.FK_CSMApprovalStatus_Request">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="CSMApprovalStatus" EntitySet="CSMApprovalStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_Contact" Association="Self.FK_Request_Contact">
+            <End Role="Contact" EntitySet="Contact" />
+            <End Role="Request" EntitySet="Request" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_EquipmentType" Association="Self.FK_Request_EquipmentType">
+            <End Role="EquipmentType" EntitySet="EquipmentType" />
+            <End Role="Request" EntitySet="Request" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_Status" Association="Self.FK_Request_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Request" EntitySet="Request" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestCapability_Capability" Association="Self.FK_RequestCapability_Capability">
+            <End Role="Capability" EntitySet="Capability" />
+            <End Role="RequestCapability" EntitySet="RequestCapability" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestCapability_Request" Association="Self.FK_RequestCapability_Request">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="RequestCapability" EntitySet="RequestCapability" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SIGApprovalStatus_Request" Association="Self.FK_SIGApprovalStatus_Request">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="SIGApprovalStatus" EntitySet="SIGApprovalStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SQDNApprovalStatus_Request" Association="Self.FK_SQDNApprovalStatus_Request">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="SQDNApprovalStatus" EntitySet="SQDNApprovalStatus" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="VPNRequestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Capability">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.RequestCapability" FromRole="Capability" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Request_Contact" FromRole="Contact" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="CSMApprovalStatu">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="Int32" Nullable="false" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="ApprovedOn" Type="DateTime" Precision="3" />
+          <Property Name="DeniedBy" Type="Int32" />
+          <Property Name="DeniedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Request" Relationship="Self.FK_CSMApprovalStatus_Request" FromRole="CSMApprovalStatus" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="EquipmentType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Request_EquipmentType" FromRole="EquipmentType" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EquipmentTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ContactId" Type="Int32" Nullable="false" />
+          <Property Name="StatusId" Type="Int32" />
+          <NavigationProperty Name="Contact" Relationship="Self.FK_Request_Contact" FromRole="Request" ToRole="Contact" />
+          <NavigationProperty Name="CSMApprovalStatu" Relationship="Self.FK_CSMApprovalStatus_Request" FromRole="Request" ToRole="CSMApprovalStatus" />
+          <NavigationProperty Name="EquipmentType" Relationship="Self.FK_Request_EquipmentType" FromRole="Request" ToRole="EquipmentType" />
+          <NavigationProperty Name="Status" Relationship="Self.FK_Request_Status" FromRole="Request" ToRole="Status" />
+          <NavigationProperty Name="SIGApprovalStatu" Relationship="Self.FK_SIGApprovalStatus_Request" FromRole="Request" ToRole="SIGApprovalStatus" />
+          <NavigationProperty Name="SQDNApprovalStatu" Relationship="Self.FK_SQDNApprovalStatus_Request" FromRole="Request" ToRole="SQDNApprovalStatus" />
+          <NavigationProperty Name="Capabilities" Relationship="Self.RequestCapability" FromRole="Request" ToRole="Capability" />
+        </EntityType>
+        <EntityType Name="SIGApprovalStatu">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="Int32" Nullable="false" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="ApprovedOn" Type="DateTime" Precision="3" />
+          <Property Name="DeniedBy" Type="Int32" />
+          <Property Name="DeniedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Request" Relationship="Self.FK_SIGApprovalStatus_Request" FromRole="SIGApprovalStatus" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="SQDNApprovalStatu">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="Int32" Nullable="false" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="ApprovedOn" Type="DateTime" Precision="3" />
+          <Property Name="DeniedBy" Type="Int32" />
+          <Property Name="DeniedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Request" Relationship="Self.FK_SQDNApprovalStatus_Request" FromRole="SQDNApprovalStatus" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Request_Status" FromRole="Status" ToRole="Request" />
+        </EntityType>
+        <Association Name="FK_Request_Contact">
+          <End Role="Contact" Type="Self.Contact" Multiplicity="1" />
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Request">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CSMApprovalStatus_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="CSMApprovalStatus" Type="Self.CSMApprovalStatu" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CSMApprovalStatus">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_EquipmentType">
+          <End Role="EquipmentType" Type="Self.EquipmentType" Multiplicity="1" />
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EquipmentType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Request">
+              <PropertyRef Name="EquipmentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Request">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SIGApprovalStatus_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="SIGApprovalStatus" Type="Self.SIGApprovalStatu" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGApprovalStatus">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SQDNApprovalStatus_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="SQDNApprovalStatus" Type="Self.SQDNApprovalStatu" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SQDNApprovalStatus">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RequestCapability">
+          <End Role="Capability" Type="Self.Capability" Multiplicity="*" />
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="VPNRequestEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Capabilities" EntityType="Self.Capability" />
+          <EntitySet Name="Contacts" EntityType="Self.Contact" />
+          <EntitySet Name="CSMApprovalStatus" EntityType="Self.CSMApprovalStatu" />
+          <EntitySet Name="EquipmentTypes" EntityType="Self.EquipmentType" />
+          <EntitySet Name="Requests" EntityType="Self.Request" />
+          <EntitySet Name="SIGApprovalStatus" EntityType="Self.SIGApprovalStatu" />
+          <EntitySet Name="SQDNApprovalStatus" EntityType="Self.SQDNApprovalStatu" />
+          <EntitySet Name="Status" EntityType="Self.Status" />
+          <AssociationSet Name="FK_Request_Contact" Association="Self.FK_Request_Contact">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="Request" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CSMApprovalStatus_Request" Association="Self.FK_CSMApprovalStatus_Request">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="CSMApprovalStatus" EntitySet="CSMApprovalStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_EquipmentType" Association="Self.FK_Request_EquipmentType">
+            <End Role="EquipmentType" EntitySet="EquipmentTypes" />
+            <End Role="Request" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_Status" Association="Self.FK_Request_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Request" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SIGApprovalStatus_Request" Association="Self.FK_SIGApprovalStatus_Request">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="SIGApprovalStatus" EntitySet="SIGApprovalStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SQDNApprovalStatus_Request" Association="Self.FK_SQDNApprovalStatus_Request">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="SQDNApprovalStatus" EntitySet="SQDNApprovalStatus" />
+          </AssociationSet>
+          <AssociationSet Name="RequestCapability" Association="Self.RequestCapability">
+            <End Role="Capability" EntitySet="Capabilities" />
+            <End Role="Request" EntitySet="Requests" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="VPNRequestModelStoreContainer" CdmEntityContainer="VPNRequestEntities">
+          <EntitySetMapping Name="Capabilities">
+            <EntityTypeMapping TypeName="VPNRequestModel.Capability">
+              <MappingFragment StoreEntitySet="Capability">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="VPNRequestModel.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CSMApprovalStatus">
+            <EntityTypeMapping TypeName="VPNRequestModel.CSMApprovalStatu">
+              <MappingFragment StoreEntitySet="CSMApprovalStatus">
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="ApprovedOn" ColumnName="ApprovedOn" />
+                <ScalarProperty Name="DeniedBy" ColumnName="DeniedBy" />
+                <ScalarProperty Name="DeniedOn" ColumnName="DeniedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EquipmentTypes">
+            <EntityTypeMapping TypeName="VPNRequestModel.EquipmentType">
+              <MappingFragment StoreEntitySet="EquipmentType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="VPNRequestModel.Request">
+              <MappingFragment StoreEntitySet="Request">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EquipmentTypeId" ColumnName="EquipmentTypeId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SIGApprovalStatus">
+            <EntityTypeMapping TypeName="VPNRequestModel.SIGApprovalStatu">
+              <MappingFragment StoreEntitySet="SIGApprovalStatus">
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="ApprovedOn" ColumnName="ApprovedOn" />
+                <ScalarProperty Name="DeniedBy" ColumnName="DeniedBy" />
+                <ScalarProperty Name="DeniedOn" ColumnName="DeniedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SQDNApprovalStatus">
+            <EntityTypeMapping TypeName="VPNRequestModel.SQDNApprovalStatu">
+              <MappingFragment StoreEntitySet="SQDNApprovalStatus">
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="ApprovedOn" ColumnName="ApprovedOn" />
+                <ScalarProperty Name="DeniedBy" ColumnName="DeniedBy" />
+                <ScalarProperty Name="DeniedOn" ColumnName="DeniedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="VPNRequestModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="RequestCapability" TypeName="VPNRequestModel.RequestCapability" StoreEntitySet="RequestCapability">
+            <EndProperty Name="Capability">
+              <ScalarProperty Name="Id" ColumnName="CapabilityId" />
+            </EndProperty>
+            <EndProperty Name="Request">
+              <ScalarProperty Name="Id" ColumnName="RequestId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
